@@ -5,10 +5,21 @@ from django.db import models
 class User(AbstractUser):
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
+    email = models.EmailField()
     phone = models.CharField(max_length=20)
 
     class Meta:
         db_table = 'auth_user'
+
+
+class CustomerContact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='user_contact')
+    customer = models.ForeignKey('customer.Customer', on_delete=models.CASCADE, null=True, blank=True,
+                                 related_name='customer_contact')
+    first_name = models.CharField(max_length=256, db_index=True)
+    last_name = models.CharField(max_length=256, db_index=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, null=True, blank=True)
 
 
 class Customer(models.Model):
